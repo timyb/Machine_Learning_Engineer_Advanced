@@ -13303,7 +13303,12 @@ Think about the pros and cons of adding more training points based on if the tra
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>*<em>Answer: </em><br><br>The maximum depth for the model is 3 according to the above graphs. With more training points flow in, traing curse flattens out at around score 1.0, but testing curse doesn't change so much, still remains the same between 0.6 and 0.8, the model becomes overfitting when we increase the depth. Having more training data might help to reduce the level of overfitting, or we can try to regularize our input data once we don't have more data (normally it's expensive to acquire more data and sometime even impossbile), or drop some redundant feature(s)*</p>
+<p><strong>Answer: </strong><br><br></p>
+<ol>
+<li>I choose the max_depth = 3 model. The maximum depth for the model is 3 <br></li>
+<li>With more training points flow in, traing curve start decreasing from score 1 to about 0.9 for the first 50 data points, then the downtrend slow down a little bit and the curve remains stable at round 0.8. The testing curve increase drastically when the first 50 points flow in, and then it climbs up slowly to a position where slightly smaller than 0.8 along with more data are added.<br></li>
+<li>The testing curve tends to be stable at around 0.7 - 0.8 and there is no sign of significant improvement to the score when we add more data to the model, so the model might not benefit from more data.</li>
+</ol>
 
 </div>
 </div>
@@ -13851,8 +13856,8 @@ I believe the maximum depth for the model should be 4. Because we can see from t
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong><br><br></p>
 <ol>
-<li>k-fold simply means we split our data into k clusters (or maybe say buckets) and train our model k times, and we use different cluster as testing set each time.</li>
-<li>By adopting k-fold method, we don't lose some valuable training data for building up our model。</li>
+<li>k-fold simply means we split our data into k clusters (or maybe say buckets). Each time we use 1 of the k clusters as testing set and the remaining data as training set, then we repeat this process for k times (simply means to train our model k times), finally we calculates the average error over all iterations (k).<br></li>
+<li>This technique helps to reduce the variance of model performance estimate。Some times the training data might be highly skewed (or maybe say don't represent the overall dataset well), and if we train our model base on this kind of data, the estimate for the model performance might turns out to be high variance, k-fold makes this less sensitive to how the data be splited (each data point would be in test set once, and be in training set k-1 times) </li>
 </ol>
 
 </div>
@@ -13999,7 +14004,7 @@ For the <code>fit_model</code> function in the code cell below, you will need to
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong> Hint: </strong> The answer comes from the output of the code snipped above.</p>
-<p><strong>Answer: </strong>Parameter 'max_depth' is 4 for the optimal model.</p>
+<p><strong>Answer: </strong><br>Parameter 'max_depth' is 4 for the optimal model. And it matches with what the curve in Q6 show us, the testing score starts decreasing after depth 4.</p>
 
 </div>
 </div>
@@ -14094,9 +14099,37 @@ Predicted selling price for Client 3&#39;s home: $938,053.85
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong><br></p>
 <ol>
-<li><br>price for clients: \$404,911.11, <br>price for client 2: \$212,223.53, <br>price for client 3: \$938,053.85</li>
-<li><br>These prices seem reasonable. Client 3 has the biggest houses with most rooms among all 3 clients, the poverty is also the lowest, and each student can has more attentions from teacher according to the 12-to-1 student-teacher ratio. Similarly we can know that the prices for client 1&amp;2 are also reasonable respectively. </li>
+<li><br>price for clients 1: \$404,911.11, <br>price for client 2: \$212,223.53, <br>price for client 3: \$938,053.85</li>
+<li><br>
+Insights from descriptive statistics:<br>
+We already knew that the mean price (also goes by expected value in stat) is \$454,342.94, median is \$438,900.00, together with the Std \$165,171.13 we have a rough idea regarding how the data distribute. The min price \$105,000.00 and the max price \$1,024,800.00 let us know about the upper and lower limits of the data.<br><br></li>
 </ol>
+<p>Client 1 (\$404,911.11)<br></p>
+
+<pre><code>* The predicted price lies within the reasonable range of prices according to those descriptive stat. Slightly less than the mean price (within one std)
+* As for the features, number of rooms is in between client 2 and 3, and the same for the other 2 features. It should be reasonable for its predicted price also in between.
+* The price for client 1 is reasonable
+</code></pre>
+<p><br>
+Client 2 (\$212,223.53)<br></p>
+
+<pre><code>* The predicted price still lies in the reasonable range, but smaller than mean price for about 1.47 std
+* Number of rooms in client 2's house is less than the other 2 clients, and the house got the highest LSTAT and
+  PTRATIO among all 3 clients, all these indicate that the price for the house would be the lowest one, which
+  matches with the estimate.
+* We can still say it's a reasonable price for the house, but since the value is a little bit far from the mean
+  price, more factors might come into play.
+</code></pre>
+<p><br>
+Client 3 (\$938,053.85)<br></p>
+
+<pre><code>* The predicted price is way above the mean price for almost 3 std and just a little bit shy of the
+  max value, I don't think this should be counted as the normal case for the dataset, maybe a candidate for the
+  outlier.
+* The house has the most number of rooms amongs all 3 clients and with the lowest LSTAT and PTRATIO, which
+  make its estimate the highest. The result also in accordance with its values of features
+* Since this estimate is too far away from the mean, the ability of the model to yield a reasonable value is
+  weak, we should think about whether include this case into our dataset carefully.</code></pre>
 
 </div>
 </div>
@@ -14183,7 +14216,9 @@ Range in prices: $69,044.61
 <li>I believe there're not enough features to describe a home, people might also need to know whether there is a garage, the years of the house, size of the yard (if any), or whether there is a swimming pool, etc.<br></li>
 <li>According to the range in pridicted price from above codes, the model might not be robust enough since the result is unstable every time it had been trained on new dataset, which means it can't generalize well on new data.<br></li>
 <li>Data collected from Boston won't be applicable (or poorly) in a rural city since people live there might have very different requirements, even a same feature might vary drastically.<br></li>
-<li>It depends. But generally speaking, it's unfair to judge just base on the characteristics of the entire neighborhood (high bias), many other factors might count as well.</li>
+<li>It depends. But generally speaking, it's unfair to judge just base on the characteristics of the entire neighborhood (high bias), many other factors might count as well.
+<br><br>
+In conclusion, I don't recommend to use this model in a real-world setting since the aged dataset has limited number of features, low robustness(poor sensitivity analysis result with high variance) and poor generalizability (might not be applicable in rural area)</li>
 </ol>
 
 </div>
