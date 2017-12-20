@@ -12199,7 +12199,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[84]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="k">import</span> <span class="n">train_test_split</span>
@@ -12215,7 +12215,8 @@ div#notebook {
     <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">item</span><span class="p">],</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
     <span class="c1"># TODO: Create a decision tree regressor and fit it to the training set</span>
-    <span class="n">regressor</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+    <span class="c1"># Change random_state to 0 base on opinion from reviewer</span>
+    <span class="n">regressor</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">regressor_fit</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
 
     <span class="c1"># TODO: Report the score of the prediction using the testing set</span>
@@ -12235,12 +12236,12 @@ div#notebook {
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>The R^2 score of the &#39;Fresh&#39; is -0.270369152817
-The R^2 score of the &#39;Milk&#39; is 0.230549573468
-The R^2 score of the &#39;Grocery&#39; is 0.678746527098
-The R^2 score of the &#39;Frozen&#39; is -0.269902967624
-The R^2 score of the &#39;Detergents_Paper&#39; is 0.428041355869
-The R^2 score of the &#39;Delicatessen&#39; is -1.69573371424
+<pre>The R^2 score of the &#39;Fresh&#39; is -0.333070533605
+The R^2 score of the &#39;Milk&#39; is 0.173438009379
+The R^2 score of the &#39;Grocery&#39; is 0.699248196675
+The R^2 score of the &#39;Frozen&#39; is -0.278249148824
+The R^2 score of the &#39;Detergents_Paper&#39; is 0.348777454691
+The R^2 score of the &#39;Delicatessen&#39; is -11.0236279005
 </pre>
 </div>
 </div>
@@ -14383,9 +14384,12 @@ A65W2oecSj8xAAAAAElFTkSuQmCC
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong><br></p>
 <ul>
-<li>Judging from the scatter matrix, it seems all pairs of features are right skew(also goes by positive skew) except for the pair of Grocery and Detergents_Paper look like <strong>normally distributed (symmetric)</strong>, Milk and Grocery also shows some symmetric sign. What's more, the corr table and the heatmap in above also tell us the correlation coefficient of Grocery and Detergents_Paper is high (0.92 actually)! It confirms our previous judgement. And there're a few (range from 1-5 roughly) outliers for each pair of features at the far end along x and y axis.</li>
+<li>Judging from the scatter matrix, it seems all pairs of features are right skew(also goes by positive skew) except for the pair of Grocery and Detergents_Paper look like <strong>normally distributed (symmetric)</strong>, which means the information they've is more or less the same. Milk and Grocery also shows some symmetric sign. What's more, the corr table and the heatmap in above also tell us the correlation coefficient of Grocery and Detergents_Paper is high (0.92 actually)! It confirms our previous judgement. And there're a few (range from 1-5 roughly) outliers for each pair of features at the far end along x and y axis.</li>
 <li>The highest correlated pair of feature is Grocery and Detergents_Paper (0.92), Milk and Grocery comes next (0.73), which has been followed by Detergents_Paper and Milk (0.66).</li>
 <li>It confirms my suspicions against those 2 pairs of feature (Grocery and Detergents_Paper; Milk and Grocery)</li>
+</ul>
+<ul>
+<li>As we can see from the marginal distribution along diagonal in above scatter chart, the distribution of the data is clearly asymmetrical (extremly right skew) where the right tail is much longer than the left one, the median and the mode vary significantly, that's where feature scaling comes into play.</li>
 </ul>
 
 </div>
@@ -19852,10 +19856,10 @@ Wk+cEQoAAAAASUVORK5CYII=
 <li>72.52% of variance is exlained in total by the first and second principal components.</li>
 <li>92.79% of variance is exlained in total by the first four principal components.</li>
 <li>Discussions are as follow:<ul>
-<li>Dimension 1 makes up 49.93% of variance. High end customers in this dimension purchase a lot of <strong>Milk, Grocery, and Detergents_Paper</strong> (way above average), and it's less likely for them to buy <strong>Fresh and Frozen</strong>, while those low end ones don't follow this pattern.</li>
-<li>Dimension 2 makes up 22.59% of variance. Hign end customers in this dimension purchase a lot of <strong>Fresh, Frozen, and Delicatessen</strong> along with small amount of <strong>Milk and Grocery</strong>, while those low end ones don't follow this pattern.</li>
-<li>Dimension 3 makes up 10.49% of variance. Hign end customers in this dimension purchase a lot of <strong>Milk, Frozen, and Delicatessen</strong>, but they don't like to purchase <strong>Fresh and Detergents_Paper</strong>, while those low end ones don't follow this pattern.</li>
-<li>Dimension 4 makes up 9.78% of variance. Hign end customers in this dimension purchase a lot of <strong>Delicatessen and Fresh</strong> along with small amount of <strong>Milk and Grocery</strong>, but they avoid purchasing <strong>Frozen and Detergents_Paper</strong> at the same time, while those low end ones don't follow this pattern.</li>
+<li>Dimension 1 makes up 49.93% of variance. High end customers in this dimension purchase a lot of <strong>Milk, Grocery, and Detergents_Paper</strong> (way above average), but their consumption of <strong>Fresh and Frozen</strong> decreases (below average). While those low end ones don't follow this pattern.</li>
+<li>Dimension 2 makes up 22.59% of variance. Hign end customers in this dimension purchase a lot of <strong>Fresh, Frozen, and Delicatessen</strong> along with small amount of <strong>Milk and Grocery</strong>, but the consumption of <strong>Detergents_Paper</strong> is below average in this dimension. While those low end ones don't follow this pattern.</li>
+<li>Dimension 3 makes up 10.49% of variance. Hign end customers in this dimension purchase a lot of <strong>Milk, Frozen, and Delicatessen</strong>, but they only purchase small amount of <strong>Fresh and Detergents_Paper</strong> (way below average) and don't spend too much on <strong>Grocery</strong> (look like it's within an ace of average spending)  , while those low end ones don't follow this pattern.</li>
+<li>Dimension 4 makes up 9.78% of variance. Hign end customers in this dimension purchase a lot of <strong>Delicatessen and Fresh</strong> along with small amount of <strong>Milk and Grocery</strong>, but the spending on <strong>Frozen</strong> decreases dramatically (a lot less than average). And customers in this dimension also don't purchase too many <strong>Detergents_Paper</strong>, the spending is below the average by a large amount of value as well. While those low end ones don't follow this pattern.</li>
 </ul>
 </li>
 </ul>
@@ -22446,7 +22450,14 @@ Sample point 2 predicted to be in Cluster 1
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong><br></p>
-<p>Normally, those products which tends to consumed by customers more frequently require a higher frequency of delivery service (this kind of products is more likely to perish as well according to my knowledge). And we already know that Customers from Segment 1 tends to purchase a large amount of <strong>Milk, Grocery and Detergents_Paper</strong> which turn out to be this kind of products, So it's reasonable to believe that customers from segment 1 are more likely to react positively to the change in delivery service.</p>
+<p>Normally, those products which tends to consumed by customers more frequently require a higher frequency of delivery service (this kind of products is more likely to perish as well according to my knowledge). And we already know that Customers from Segment 1 tends to purchase a large amount of <strong>Milk, Grocery and Detergents_Paper</strong> which turn out to be this kind of products, So it's reasonable to believe that customers from segment 1 are more likely to react positively to the change in delivery service. The procedure should be selecting two samples from each of these segments and apply A/B to them, then see how this sample react to the change.<br></p>
+<p>The procedures for executing A/B test are as follow:</p>
+<ol>
+<li>First, I'll randomly extract about 90% data points(just don't want to disturb too many customers once the hypothesis is incorrect, the 80% here isn't fixed and just base on my juedement) from segment 0 and segment 1 respectively as the test samples. And in each sample, 50% should be used as experiment set and the other 50% should be used as control set, by doing so we can ensure that the experiment set is similar to control set in each segment case since they all come from the same cluster, and those data points that lie in same cluster tend to be similar to each other at a certain degree.</li>
+<li>Wholesale can now make the change for customers in experiment set and measure the level of reaction agsinst control set.</li>
+<li>We can try to come up with a conclusion after conducting the A/B test for a predetermined amount of time (almost every test require to be conducted within a certain amount of time in the purpose of prevent some hypothesis or some attributes of the sample from being changed), we need to compare the result from experiment and control set by adopting some metrics (e.g. t-test for determining whether the means of 2 normally distribute dataset are equal with certain level of confidence), or we can just plot the data and judge it by our experiences.</li>
+<li>I believe two A/B test would have sufficed, one for segment 0 and one for segment 1.</li>
+</ol>
 
 </div>
 </div>
